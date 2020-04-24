@@ -106,7 +106,10 @@ void Nave::muerte()
     }
 }
 
-
+void cancionMenu()
+{
+    PlaySound(TEXT("menu.wav"),NULL,SND_ASYNC);
+}
 //Funcion para ocultar el parpadeo del cursor
 void cursor_ocultar()
 {
@@ -131,7 +134,13 @@ int menu(const char *titulo,const char *opciones[],int n)
         system("cls");
         SetConsoleTextAttribute(cons,14);
         gotoxy(33,20+opcionSeleccionada);printf("-->");
-        gotoxy(35,5);printf(titulo);
+        gotoxy(4,5);printf("#     #                          #####                                    ");
+        gotoxy(4,6);printf("##   ##  ####   ####  #    #    #     # #####  ######  ####  #####   ##   ");
+        gotoxy(4,7);printf("# # # # #    # #    # ##   #    #       #    # #      #        #    #  #  ");
+        gotoxy(4,8);printf("#  #  # #    # #    # # #  #    #       #    # #####   ####    #   #    #   ");
+        gotoxy(4,9);printf("#     # #    # #    # #  # #    #       #####  #           #   #   ###### ");
+        gotoxy(4,10);printf("#     # #    # #    # #   ##    #     # #   #  #      #    #   #   #    # ");
+        gotoxy(4,11);printf("#     #  ####   ####  #    #     #####  #    # ######  ####    #   #    # ");
         SetConsoleTextAttribute(cons,7);
         for(int i=0;i<n;i++)
         {
@@ -163,6 +172,7 @@ int menu(const char *titulo,const char *opciones[],int n)
         }
 
     }
+
     SetConsoleTextAttribute(cons,15);
     return opcionSeleccionada;
 }
@@ -213,21 +223,41 @@ void limites()
     gotoxy(77,3);printf("%c",187);
     gotoxy(77,33);printf("%c",188);
 }
-
+void instrucciones()
+{
+    HANDLE cons;
+    cons = GetStdHandle(STD_OUTPUT_HANDLE);
+    limpiarPantalla();
+    SetConsoleTextAttribute(cons,14);
+    gotoxy(35,1);printf("Instrucciones\n");
+    SetConsoleTextAttribute(cons,7);
+    gotoxy(8,5);printf("El objetivo principal de Moon Cresta es destruir a los alienigenas.\n");
+    gotoxy(27,10);printf("Controles\n");
+    gotoxy(27,12);printf("<- Moverse a la izquierda\n");
+    gotoxy(27,14);printf("-> Moverse a la derecha\n");
+    gotoxy(27,16);printf("[A] Disparar\n");
+    gotoxy(27,18);printf("[ESC] Menu de pausa\n");
+    gotoxy(20,28);printf("Presione ENTER para volver al menu principal\n");
+    gotoxy(26,30);printf("Presione otra tecla para salir\n");
+}
 int main()
 {
+    //Crear el objeto
+    Nave ob(38,27,3);
+    cursor_ocultar();
     const char *titulo = "Moon Cresta";
-    const char *opciones[] = {"Jugar","Creditos","Salir"};
-    int n = 3;
+    const char *opciones[] = {"Jugar","Instrucciones","Creditos","Salir"};
+    int n = 4;
     int tecla;
     int opcion;
     bool fin = false;
-
-    cursor_ocultar();
-    //Crear el objeto
-    Nave ob(38,27,3);
+    bool men = true;
+    while(men)
+    {
+    cancionMenu();
     opcion = menu(titulo,opciones,n);
     limpiarPantalla();
+    PlaySound(NULL,NULL,0);
     switch(opcion){
         case 1:
             limites();
@@ -242,18 +272,32 @@ int main()
 
             }
         case 2:
-            creditos();
+            instrucciones();
             tecla=getch();
             if(tecla==enter)
             {
-                menu(titulo,opciones,n);
+                break;
+            }else
+            {
+                return 0;
+            }
+        case 3:
+            creditos();
+            if(tecla==enter)
+            {
+                break;
+            }else
+            {
+                return 0;
             }
             break;
-        case 3:
+        case 4:
             return 0;
             break;
 
     }
+    }
+
 
     return 0;
 }
