@@ -120,6 +120,32 @@ void cursor_ocultar()
     c.bVisible = false;
     SetConsoleCursorInfo(consola,&c);
 }
+
+//Estrellas en el menu
+void estrellas() {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    SetConsoleTextAttribute(hConsole, 9);
+    gotoxy(42, 7); cout << "*";  gotoxy(13, 22); cout << "*";
+    gotoxy(64, 30); cout << "*";  gotoxy(45, 14); cout << "*";
+    gotoxy(22, 27); cout << "*";  gotoxy(58, 24); cout << "*";
+    gotoxy(8, 8); cout << "*";  gotoxy(58, 10); cout << "*";
+    gotoxy(64, 5); cout << "*";  gotoxy(36, 18); cout << "*";
+    gotoxy(26, 15); cout << "*";  gotoxy(15, 13); cout << "*";
+    gotoxy(30, 9); cout << "*";  gotoxy(50, 29); cout << "*";
+    gotoxy(10, 27); cout << "*";  gotoxy(13, 17); cout << "*";
+    gotoxy(19, 6); cout << "*";  gotoxy(29, 6); cout << "*";
+    gotoxy(50, 4); cout << "*";  gotoxy(70, 7); cout << "*";
+    gotoxy(73, 10); cout << "*";  gotoxy(69, 12); cout << "*";
+    gotoxy(45, 11); cout << "*";  gotoxy(45, 20); cout << "*";
+    gotoxy(55, 18); cout << "*";  gotoxy(57, 14); cout << "*";
+    gotoxy(67, 17); cout << "*";  gotoxy(66, 21); cout << "*";
+    gotoxy(72, 25); cout << "*";  gotoxy(39, 29); cout << "*";
+    gotoxy(15, 30); cout << "*";  gotoxy(27, 31); cout << "*";
+    gotoxy(34, 26); cout << "*";  gotoxy(28, 23); cout << "*";
+    gotoxy(23, 19); cout << "*";  gotoxy(40, 23); cout << "*";
+}
+
 //Funcion para crear el menu
 int menu(const char *titulo,const char *opciones[],int n)
 {
@@ -132,6 +158,7 @@ int menu(const char *titulo,const char *opciones[],int n)
     while(repetir)
     {
         system("cls");
+        estrellas();
         SetConsoleTextAttribute(cons,14);
         gotoxy(33,20+opcionSeleccionada);printf("-->");
         gotoxy(4,5);printf("#     #                          #####                                    ");
@@ -205,7 +232,7 @@ void creditos()
     gotoxy(29,25);printf("Prof. Jonathan Soto Munoz\n");
     gotoxy(20,28);printf("Presione ENTER para volver al menu principal\n");
     gotoxy(26,30);printf("Presione otra tecla para salir\n");
-
+    estrellas();
 }
 //Crea los bordes y esquinas
 void limites()
