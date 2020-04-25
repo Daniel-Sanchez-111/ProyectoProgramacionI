@@ -106,10 +106,6 @@ void Nave::muerte()
     }
 }
 
-void cancionMenu()
-{
-    PlaySound(TEXT("menu.wav"),NULL,SND_ASYNC);
-}
 //Funcion para ocultar el parpadeo del cursor
 void cursor_ocultar()
 {
@@ -120,30 +116,27 @@ void cursor_ocultar()
     c.bVisible = false;
     SetConsoleCursorInfo(consola,&c);
 }
-
-//Estrellas en el menu
 void estrellas() {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    SetConsoleTextAttribute(hConsole, 9);
-    gotoxy(42, 7); cout << "*";  gotoxy(13, 22); cout << "*";
-    gotoxy(64, 30); cout << "*";  gotoxy(45, 14); cout << "*";
-    gotoxy(22, 27); cout << "*";  gotoxy(58, 24); cout << "*";
-    gotoxy(8, 8); cout << "*";  gotoxy(58, 10); cout << "*";
-    gotoxy(64, 5); cout << "*";  gotoxy(36, 18); cout << "*";
-    gotoxy(26, 15); cout << "*";  gotoxy(15, 13); cout << "*";
-    gotoxy(30, 9); cout << "*";  gotoxy(50, 29); cout << "*";
-    gotoxy(10, 27); cout << "*";  gotoxy(13, 17); cout << "*";
-    gotoxy(19, 6); cout << "*";  gotoxy(29, 6); cout << "*";
-    gotoxy(50, 4); cout << "*";  gotoxy(70, 7); cout << "*";
-    gotoxy(73, 10); cout << "*";  gotoxy(69, 12); cout << "*";
-    gotoxy(45, 11); cout << "*";  gotoxy(45, 20); cout << "*";
-    gotoxy(55, 18); cout << "*";  gotoxy(57, 14); cout << "*";
-    gotoxy(67, 17); cout << "*";  gotoxy(66, 21); cout << "*";
-    gotoxy(72, 25); cout << "*";  gotoxy(39, 29); cout << "*";
-    gotoxy(15, 30); cout << "*";  gotoxy(27, 31); cout << "*";
-    gotoxy(34, 26); cout << "*";  gotoxy(28, 23); cout << "*";
-    gotoxy(23, 19); cout << "*";  gotoxy(40, 23); cout << "*";
+    SetConsoleTextAttribute(hConsole, 15);
+    gotoxy(42, 7); cout << "+";  gotoxy(13, 22); cout << "+";
+    gotoxy(64, 30); cout << "+";  gotoxy(45, 14); cout << "+";
+    gotoxy(22, 27); cout << "+";  gotoxy(58, 24); cout << "+";
+    gotoxy(8, 8); cout << "+";  gotoxy(58, 10); cout << "+";
+    gotoxy(26, 15); cout << "+";  gotoxy(15, 13); cout << "+";
+    gotoxy(30, 9); cout << "+";  gotoxy(50, 29); cout << "+";
+    gotoxy(10, 27); cout << "+";  gotoxy(13, 17); cout << "+";
+    gotoxy(19, 6); cout << "+";  gotoxy(29, 6); cout << "+";
+    gotoxy(50, 4); cout << "+";  gotoxy(70, 7); cout << "+";
+    gotoxy(73, 10); cout << "+";  gotoxy(69, 12); cout << "+";
+    gotoxy(45, 11); cout << "+";  gotoxy(45, 20); cout << "+";
+    gotoxy(55, 18); cout << "+";  gotoxy(57, 14); cout << "+";
+    gotoxy(67, 17); cout << "+";  gotoxy(66, 21); cout << "+";
+    gotoxy(72, 25); cout << "+";  gotoxy(39, 29); cout << "+";
+    gotoxy(15, 30); cout << "+";  gotoxy(27, 31); cout << "+";
+    gotoxy(34, 26); cout << "+";  gotoxy(28, 23); cout << "+";
+    gotoxy(23, 19); cout << "+";
 }
 
 //Funcion para crear el menu
@@ -155,10 +148,11 @@ int menu(const char *titulo,const char *opciones[],int n)
     int opcionSeleccionada=1;
     int tecla;
     bool repetir = true;
+
     while(repetir)
     {
+
         system("cls");
-        estrellas();
         SetConsoleTextAttribute(cons,14);
         gotoxy(33,20+opcionSeleccionada);printf("-->");
         gotoxy(4,5);printf("#     #                          #####                                    ");
@@ -173,9 +167,11 @@ int menu(const char *titulo,const char *opciones[],int n)
         {
             gotoxy(37,21+i);printf(opciones[i]);
         }
+        estrellas();
         do{
             tecla=getch();
         }while(tecla!=arriba && tecla!=abajo && tecla!=enter);
+
         switch(tecla)
         {
             case arriba:
@@ -203,6 +199,7 @@ int menu(const char *titulo,const char *opciones[],int n)
     SetConsoleTextAttribute(cons,15);
     return opcionSeleccionada;
 }
+
 void limpiarPantalla()
 {
     gotoxy(35,5);printf("           ");
@@ -219,7 +216,7 @@ void creditos()
     cons = GetStdHandle(STD_OUTPUT_HANDLE);
     limpiarPantalla();
     SetConsoleTextAttribute(cons,14);
-    gotoxy(35,1);printf("Creditos\n");
+    gotoxy(38,1);printf("Creditos\n");
     SetConsoleTextAttribute(cons,7);
     gotoxy(20,5);printf("Universidad Autonoma de Baja California Sur\n");
     gotoxy(17,7);printf("Departamento Academico de Sistemas Computacionales\n");
@@ -234,6 +231,7 @@ void creditos()
     gotoxy(26,30);printf("Presione otra tecla para salir\n");
     estrellas();
 }
+
 //Crea los bordes y esquinas
 void limites()
 {
@@ -250,8 +248,24 @@ void limites()
     gotoxy(77,3);printf("%c",187);
     gotoxy(77,33);printf("%c",188);
 }
+
+void cancionMenu()
+{
+    PlaySound(TEXT("menu.wav"),NULL,SND_ASYNC);
+}
+void cancionCred()
+{
+    PlaySound(TEXT("cred.wav"),NULL,SND_ASYNC);
+}
+void cancionJuego()
+{
+    PlaySound(TEXT("juego.wav"),NULL,SND_ASYNC);
+}
+
 void instrucciones()
 {
+
+
     HANDLE cons;
     cons = GetStdHandle(STD_OUTPUT_HANDLE);
     limpiarPantalla();
@@ -266,7 +280,9 @@ void instrucciones()
     gotoxy(27,18);printf("[ESC] Menu de pausa\n");
     gotoxy(20,28);printf("Presione ENTER para volver al menu principal\n");
     gotoxy(26,30);printf("Presione otra tecla para salir\n");
+    estrellas();
 }
+
 int main()
 {
     //Crear el objeto
@@ -288,6 +304,7 @@ int main()
     switch(opcion){
         case 1:
             limites();
+            cancionJuego();
             //Llamar a los metodos de la clase
             ob.crear();
             //Hace que el juego se siga ejecutando
@@ -310,6 +327,8 @@ int main()
             }
         case 3:
             creditos();
+            cancionJuego();
+            tecla=getch();
             if(tecla==enter)
             {
                 break;
@@ -317,7 +336,6 @@ int main()
             {
                 return 0;
             }
-            break;
         case 4:
             return 0;
             break;
