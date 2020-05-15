@@ -60,9 +60,15 @@ int Nave::rVidas()
 //Crea la nave
 void Nave::crear()
 {
+    cons = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    SetConsoleTextAttribute(cons, 1);
     gotoxy(x,y);  printf("  %c ",94);
+    SetConsoleTextAttribute(cons, 8);
     gotoxy(x,y+1);printf(" %c%c%c ",40,238,41);
+    SetConsoleTextAttribute(cons, 12);
     gotoxy(x,y+2);printf("  %c ",176);
+    SetConsoleTextAttribute(cons, 15);
 }
 //Borra el rastro de la nave
 void Nave::borrador()
@@ -94,9 +100,10 @@ void Nave::mover()
 }
 void Nave::corazon()
 {
-    gotoxy(65,2);printf("Vidas: %d",vidas);
     HANDLE consola;
     consola = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(consola,10);
+    gotoxy(65,2);printf("Vidas: %d",vidas);
     gotoxy(7,2);printf("Salud:");
     gotoxy(13,2);printf("     ");
     for(int i=0;i<salud;i++){
@@ -158,7 +165,17 @@ int Alien::Y()
 }
 void Alien::crear()
 {
-    gotoxy(x,y);printf("%c%c%c%c",60,40,41,62);
+
+    cons = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    SetConsoleTextAttribute(cons, 10);
+    gotoxy(x,y);printf("%c",60);
+    SetConsoleTextAttribute(cons, 12);
+    gotoxy(x+1,y);printf("%c",40);
+    gotoxy(x+2,y);printf("%c",41);
+    SetConsoleTextAttribute(cons, 10);
+    gotoxy(x+3,y);printf("%c",62);
+    SetConsoleTextAttribute(cons, 15);
 }
 void Alien::mover()
 {
@@ -246,29 +263,27 @@ void estrellas() {
 
     SetConsoleTextAttribute(hConsole, 15);
     gotoxy(42, 7); cout << "+";  gotoxy(13, 22); cout << "+";
-    gotoxy(64, 30); cout << "+";  gotoxy(39, 14); cout << "+";
+    gotoxy(39, 14); cout << "+";
     gotoxy(22, 27); cout << "+";  gotoxy(58, 24); cout << "+";
-    gotoxy(8, 8); cout << "+";  gotoxy(58, 10); cout << "+";
+    gotoxy(8, 8); cout << "+";
     gotoxy(26, 15); cout << "+";  gotoxy(15, 13); cout << "+";
     gotoxy(30, 9); cout << "+";  gotoxy(50, 29); cout << "+";
     gotoxy(10, 27); cout << "+";  gotoxy(13, 17); cout << "+";
-    gotoxy(19, 6); cout << "+";  gotoxy(29, 6); cout << "+";
-    gotoxy(50, 4); cout << "+";  gotoxy(70, 7); cout << "+";
+    gotoxy(29, 6); cout << "+";
+    gotoxy(70, 7); cout << "+";   gotoxy(43, 31); cout << "+";
     gotoxy(73, 10); cout << "+";  gotoxy(69, 12); cout << "+";
     gotoxy(45, 11); cout << "+";  gotoxy(45, 20); cout << "+";
     gotoxy(55, 18); cout << "+";  gotoxy(57, 14); cout << "+";
     gotoxy(67, 17); cout << "+";  gotoxy(66, 21); cout << "+";
-    gotoxy(72, 25); cout << "+";  gotoxy(39, 29); cout << "+";
+    gotoxy(72, 25); cout << "+";  gotoxy(55, 33); cout << "+";
     gotoxy(15, 30); cout << "+";  gotoxy(27, 31); cout << "+";
-    gotoxy(34, 26); cout << "+";  gotoxy(28, 23); cout << "+";
+    gotoxy(34, 26); cout << "+";
     gotoxy(23, 19); cout << "+";
 }
 
 //Funcion para crear el menu
 int menu(const char *titulo,const char *opciones[],int n)
 {
-
-    HANDLE cons;
     cons = GetStdHandle(STD_OUTPUT_HANDLE);
     int opcionSeleccionada=1;
     int tecla;
@@ -379,7 +394,7 @@ void limites()
 void score(int puntos)
 {
     cons = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(cons,14);
+    SetConsoleTextAttribute(cons,10);
     gotoxy(33,2);printf("Puntuacion: ");
     SetConsoleTextAttribute(cons,15);
     printf("%d",puntos);
@@ -439,10 +454,14 @@ int main()
     SetConsoleTitleA("Moon Cresta");
     const char *titulo = "Moon Cresta";
     const char *opciones[] = {"Jugar","Instrucciones","Creditos","Salir"};
-
+    cons = GetStdHandle(STD_OUTPUT_HANDLE);
     cursor_ocultar();
     int puntos=0;
+    int hit=0;
     int n = 4;
+    int destruidos=0;
+    int nEnemigos=0;
+    int fase=1;
     int tecla;
     int opcion;
     bool fin = false;
@@ -451,7 +470,7 @@ int main()
     list<Disparo*>:: iterator i_Disparo;
     list<Alien*>A;
     list<Alien*>::iterator i_Alien;
-    for(int i=0;i<3;i++)
+    for(int i=0;i<6;i++)
     {
         //Crea los objetos alien en una lista
         A.push_back(new Alien(rand()%66+4,rand()%5+4));
@@ -467,15 +486,11 @@ int main()
     switch(opcion){
 
         case 1:
-            //Crear el objeto
+            limites();
             puntos=0;
             fin=false;
-            limites();
-            //cancionJuego();
-            //Llamar a los metodos de la clase
-            ob.crear();
-            //Hace que el juego se siga ejecutando
             while(!fin){
+                gotoxy(36,0);printf("Nivel %d",fase);
                 if(kbhit())
                 {
                 //Crea el disparo
@@ -501,8 +516,15 @@ int main()
                     (*i_Alien)->mover();
                     (*i_Alien)->colision(ob);
                 }
-                for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+
+                ob.crear();
+                ob.corazon();
+                ob.mover();
+                ob.muerte();
+                if(fase==1)
                 {
+                    for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+                    {
                     for(i_Disparo=D.begin();i_Disparo!=D.end();i_Disparo++)
                     {
                         if((*i_Alien)->X()==(*i_Disparo)->X()||((*i_Alien)->X()+1==(*i_Disparo)->X()||(*i_Alien)->X()+2==(*i_Disparo)->X()||(*i_Alien)->X()+3==(*i_Disparo)->X())&&((*i_Alien)->Y()+1==(*i_Disparo)->Y()|| (*i_Alien)->Y()==(*i_Disparo)->Y()))
@@ -516,25 +538,122 @@ int main()
                                delete(*i_Alien);
                                i_Alien=A.erase(i_Alien);
                                puntos+=10;
+                               destruidos++;
                            }
                     }
-                }
-                ob.corazon();
-                ob.mover();
-                ob.muerte();
-                Sleep(30);
-                score(puntos);
-                if(ob.rVidas()==0)
-                {
-                    fin=true;
-                    final(puntos);
-                    tecla=getch();
-                    if(tecla==enter)
+                    }
+                    SetConsoleTextAttribute(cons,15);
+                    nEnemigos=10;
+                    Sleep(30);
+                    gotoxy(5,34);printf("Enemigos Destruidos: %d/%d",destruidos,nEnemigos);
+                    score(puntos);
+                    if(ob.rVidas()==0)
                     {
-                        break;
+                        fin=true;
+                        final(puntos);
+                        tecla=getch();
+                        if(tecla==enter)
+                        {
+                            break;
+                        }
+                    }
+                    if(destruidos==nEnemigos)
+                    {
+
+                        fase++;
                     }
                 }
-            }
+                if(fase==2)
+                {
+                    for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+                    {
+                    for(i_Disparo=D.begin();i_Disparo!=D.end();i_Disparo++)
+                    {
+                        if((*i_Alien)->X()==(*i_Disparo)->X()||((*i_Alien)->X()+1==(*i_Disparo)->X()||(*i_Alien)->X()+2==(*i_Disparo)->X()||(*i_Alien)->X()+3==(*i_Disparo)->X())&&((*i_Alien)->Y()+1==(*i_Disparo)->Y()|| (*i_Alien)->Y()==(*i_Disparo)->Y()))
+                           {
+                               gotoxy((*i_Disparo)->X(),(*i_Disparo)->Y());printf(" ");
+                               delete(*i_Disparo);
+                               i_Disparo=D.erase(i_Disparo);
+                               hit++;
+                               if(hit==2)
+                               {
+                                   A.push_back(new Alien(rand()%66+4,4));
+                                   gotoxy((*i_Alien)->X(),(*i_Alien)->Y());printf("    ");
+                                   delete(*i_Alien);
+                                   i_Alien=A.erase(i_Alien);
+                                   puntos+=20;
+                                   destruidos++;
+                                   hit=0;
+                               }
+
+                           }
+                    }
+                    }
+                    SetConsoleTextAttribute(cons,15);
+                    nEnemigos=25;
+                    Sleep(30);
+                    gotoxy(5,34);printf("Enemigos Destruidos: %d/%d",destruidos,nEnemigos);
+                    score(puntos);
+                    if(ob.rVidas()==0)
+                    {
+                        fin=true;
+                        final(puntos);
+                        tecla=getch();
+                        if(tecla==enter)
+                        {
+                            break;
+                        }
+                    }
+                    if(destruidos==nEnemigos)
+                    {
+                        fase++;
+                    }
+                }
+                if(fase==3)
+                {
+                    for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+                    {
+                    for(i_Disparo=D.begin();i_Disparo!=D.end();i_Disparo++)
+                    {
+                        if((*i_Alien)->X()==(*i_Disparo)->X()||((*i_Alien)->X()+1==(*i_Disparo)->X()||(*i_Alien)->X()+2==(*i_Disparo)->X()||(*i_Alien)->X()+3==(*i_Disparo)->X())&&((*i_Alien)->Y()+1==(*i_Disparo)->Y()|| (*i_Alien)->Y()==(*i_Disparo)->Y()))
+                           {
+                               gotoxy((*i_Disparo)->X(),(*i_Disparo)->Y());printf(" ");
+                               delete(*i_Disparo);
+                               i_Disparo=D.erase(i_Disparo);
+                               hit++;
+                               if(hit==3)
+                               {
+                                   A.push_back(new Alien(rand()%66+4,4));
+                                   gotoxy((*i_Alien)->X(),(*i_Alien)->Y());printf("    ");
+                                   delete(*i_Alien);
+                                   i_Alien=A.erase(i_Alien);
+                                   puntos+=30;
+                                   destruidos++;
+                                   hit=0;
+                               }
+
+                           }
+                    }
+                    }
+                    SetConsoleTextAttribute(cons,15);
+                    nEnemigos=45;
+                    Sleep(30);
+                    gotoxy(5,34);printf("Enemigos Destruidos: %d/%d",destruidos,nEnemigos);
+                    score(puntos);
+                    if(ob.rVidas()==0)
+                    {
+                        fin=true;
+                        final(puntos);
+                        tecla=getch();
+                        if(tecla==enter)
+                        {
+                            break;
+                        }
+                    }
+                }
+                }
+
+
             break;
         case 2:
             instrucciones();
