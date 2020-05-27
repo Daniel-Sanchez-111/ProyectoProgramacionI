@@ -122,13 +122,13 @@ void Nave::muerte()
     if(salud==0){
         borrador();
         gotoxy(x,y);  printf("  **  ");
-        gotoxy(x,y+1);printf(" **** ");
+        gotoxy(x,y+1);printf(" ** ");
         gotoxy(x,y+2);printf("  **  ");
         Sleep(200);
 
         borrador();
         gotoxy(x,y);  printf("* ** *");
-        gotoxy(x,y+1);printf(" **** ");
+        gotoxy(x,y+1);printf(" ** ");
         gotoxy(x,y+2);printf("* ** *");
         Sleep(300);
         borrador();
@@ -167,7 +167,7 @@ void Alien::crear()
 {
 
     cons = GetStdHandle(STD_OUTPUT_HANDLE);
-
+    Beep(900,150);
     SetConsoleTextAttribute(cons, 10);
     gotoxy(x,y);printf("%c",60);
     SetConsoleTextAttribute(cons, 12);
@@ -356,11 +356,11 @@ void creditos()
     cons = GetStdHandle(STD_OUTPUT_HANDLE);
     limpiarPantalla();
     SetConsoleTextAttribute(cons,14);
-    gotoxy(23,1);printf("  ____              _ _ _            ");
-    gotoxy(23,2);printf(" / ___|_ __ ___  __| (_) |_ ___  ___ ");
-    gotoxy(23,3);printf("| |   | '__/ _ \\/ _` | | __/ _ \\/ __|");
-    gotoxy(23,4);printf("| |___| | |  __/ (_| | | || (_) \\__ \\");
-    gotoxy(23,5);printf(" \\____|_|  \\___|\\__,_|_|\\__\\___/|___/");
+    gotoxy(23,1);printf("  __              _ _ _            ");
+    gotoxy(23,2);printf(" / _|_ _ __  _| () |_ _  _ ");
+    gotoxy(23,3);printf("| |   | '_/ _ \\/ _` | | _/ _ \\/ __|");
+    gotoxy(23,4);printf("| |_| | |  _/ (| | | || () \\_ \\");
+    gotoxy(23,5);printf(" \\__||  \\_|\\,||\\\\_/|__/");
     SetConsoleTextAttribute(cons,7);
     gotoxy(20,13);printf("Universidad Autonoma de Baja California Sur");
     gotoxy(17,15);printf("Departamento Academico de Sistemas Computacionales");
@@ -408,16 +408,16 @@ void final(int puntos)
 
 void cancionMenu()
 {
-    PlaySound(TEXT("menu.wav"),NULL,SND_ASYNC);
+   PlaySound(TEXT("menu.wav"),NULL,SND_ASYNC);
 }
 
 void cancionCred()
 {
-    PlaySound(TEXT("CaI.wav"),NULL,SND_ASYNC);
+   PlaySound(TEXT("CaI.wav"),NULL,SND_ASYNC);
 }
 void cancionJuego()
 {
-    PlaySound(TEXT("juego.wav"),NULL,SND_ASYNC);
+   PlaySound(TEXT("juego.wav"),NULL,SND_ASYNC);
 }
 void cancionInstrucciones()
 {
@@ -431,12 +431,12 @@ void instrucciones()
     cons = GetStdHandle(STD_OUTPUT_HANDLE);
     limpiarPantalla();
     SetConsoleTextAttribute(cons,14);
-     gotoxy(1,1);printf(" _____              _");
-    gotoxy(1,2);printf("|_   _|            | |                           (_)");
-    gotoxy(1,3);printf("  | |   _ __   ___ | |_  _ __  _   _   ___   ___  _   ___   _ __    ___  ___ ");
-    gotoxy(1,4);printf("  | |  |  _ \\ / __|| __||  __|| | | | / __| / __|| | / _ \\ |  _ \\  / _ \\/ __|");
-    gotoxy(1,5);printf(" _| |_ | | | |\\__ \\| |_ | |   | |_| || (__ | (__ | || (_) || | | ||  __/\\__ \\");
-    gotoxy(1,6);printf(" \\___/ |_| |_||___/ \\__||_|    \\__,_| \\___| \\___||_| \\___/ |_| |_| \\___||___/");
+     gotoxy(1,1);printf(" ___              _");
+    gotoxy(1,2);printf("|_   |            | |                           ()");
+    gotoxy(1,3);printf("  | |   _ _   __ | |_  _ _  _   _   __   _  _   _   _ _    __  _ ");
+    gotoxy(1,4);printf("  | |  |  _ \\ / _|| _||  _|| | | | / _| / _|| | / _ \\ |  _ \\  / _ \\/ _|");
+    gotoxy(1,5);printf(" | | | | | |\\__ \\| |_ | |   | || || (_ | (_ | || () || | | ||  _/\\_ \\");
+    gotoxy(1,6);printf(" \\__/ || |||_/ \\|||    \\_,| \\__| \\_||| \\__/ || || \\_||__/");
     SetConsoleTextAttribute(cons,7);
     gotoxy(8,10);printf("El objetivo principal de Moon Cresta es destruir a los alienigenas.");
     gotoxy(27,14);printf("Controles");
@@ -480,7 +480,7 @@ int main()
     //cancionMenu();
     opcion = menu(titulo,opciones,n);
     limpiarPantalla();
-    PlaySound(NULL,NULL,0);
+//    PlaySound(NULL,NULL,0);
     Nave ob(38,27,3,3);
     Alien al(10,4);
     switch(opcion){
