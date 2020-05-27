@@ -167,7 +167,7 @@ void Alien::crear()
 {
 
     cons = GetStdHandle(STD_OUTPUT_HANDLE);
-    Beep(900,150);
+
     SetConsoleTextAttribute(cons, 10);
     gotoxy(x,y);printf("%c",60);
     SetConsoleTextAttribute(cons, 12);
@@ -408,20 +408,20 @@ void final(int puntos)
 
 void cancionMenu()
 {
-   PlaySound(TEXT("menu.wav"),NULL,SND_ASYNC);
+//    PlaySound(TEXT("menu.wav"),NULL,SND_ASYNC);
 }
 
 void cancionCred()
 {
-   PlaySound(TEXT("CaI.wav"),NULL,SND_ASYNC);
+ //   PlaySound(TEXT("CaI.wav"),NULL,SND_ASYNC);
 }
 void cancionJuego()
 {
-   PlaySound(TEXT("juego.wav"),NULL,SND_ASYNC);
+   // PlaySound(TEXT("juego.wav"),NULL,SND_ASYNC);
 }
 void cancionInstrucciones()
 {
-    PlaySound(TEXT("CaI.wav"),NULL,SND_ASYNC);
+   // PlaySound(TEXT("CaI.wav"),NULL,SND_ASYNC);
 }
 void instrucciones()
 {
@@ -480,7 +480,7 @@ int main()
     //cancionMenu();
     opcion = menu(titulo,opciones,n);
     limpiarPantalla();
-//    PlaySound(NULL,NULL,0);
+    PlaySound(NULL,NULL,0);
     Nave ob(38,27,3,3);
     Alien al(10,4);
     switch(opcion){
