@@ -408,20 +408,20 @@ void final(int puntos)
 
 void cancionMenu()
 {
-//    PlaySound(TEXT("menu.wav"),NULL,SND_ASYNC);
+    PlaySound(TEXT("menu.wav"),NULL,SND_ASYNC);
 }
 
 void cancionCred()
 {
- //   PlaySound(TEXT("CaI.wav"),NULL,SND_ASYNC);
+    PlaySound(TEXT("cred.wav"),NULL,SND_ASYNC);
 }
 void cancionJuego()
 {
-   // PlaySound(TEXT("juego.wav"),NULL,SND_ASYNC);
+    PlaySound(TEXT("juego.wav"),NULL,SND_ASYNC);
 }
 void cancionInstrucciones()
 {
-   // PlaySound(TEXT("CaI.wav"),NULL,SND_ASYNC);
+    PlaySound(TEXT("cred.wav"),NULL,SND_ASYNC);
 }
 void instrucciones()
 {
