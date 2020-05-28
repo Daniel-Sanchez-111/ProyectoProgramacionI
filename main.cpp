@@ -56,6 +56,19 @@ int Nave::rVidas()
 {
     return vidas;
 }
+//Efectos de sonido in game
+void disparoSound()
+{
+    PlaySound(TEXT("disparo.wav"),NULL,SND_ASYNC);
+}
+void muertesound()
+{
+    PlaySound(TEXT("muerte.wav"),NULL,SND_ASYNC);
+}
+void colisionSound()
+{
+    PlaySound(TEXT("selec.wav"),NULL,SND_ASYNC);
+}
 
 //Crea la nave
 void Nave::crear()
@@ -127,6 +140,7 @@ void Nave::muerte()
         Sleep(200);
 
         borrador();
+        muertesound();
         gotoxy(x,y);  printf("* ** *");
         gotoxy(x,y+1);printf(" **** ");
         gotoxy(x,y+2);printf("* ** *");
@@ -484,19 +498,19 @@ void cancionMenu()
 
 void cancionCred()
 {
-    PlaySound(TEXT("CaI.wav"),NULL,SND_ASYNC);
+    PlaySound(TEXT("cred.wav"),NULL,SND_ASYNC);
 }
 void cancionJuego()
 {
-    PlaySound(TEXT("juego.wav"),NULL,SND_ASYNC);
+    PlaySound(TEXT("jefe.wav"),NULL,SND_ASYNC);
 }
 void cancionInstrucciones()
 {
-    PlaySound(TEXT("CaI.wav"),NULL,SND_ASYNC);
+    PlaySound(TEXT("Cred.wav"),NULL,SND_ASYNC);
 }
 void cancionFinal()
 {
-    PlaySound(TEXT("final.wav"),NULL,SND_ASYNC);
+    PlaySound(TEXT("juego.wav"),NULL,SND_ASYNC);
 }
 void instrucciones()
 {
@@ -559,7 +573,7 @@ int main()
     }
     while(men)
     {
-    //cancionMenu();
+    cancionMenu();
     opcion = menu(titulo,opciones,n);
     limpiarPantalla();
     PlaySound(NULL,NULL,0);
@@ -580,6 +594,7 @@ int main()
                 //Crea el disparo
                 if(GetAsyncKeyState(0x20)){
                     D.push_back(new Disparo(ob.X()+2, ob.Y()-1));
+                    disparoSound();
                 }
 
                 }
@@ -782,10 +797,10 @@ int main()
                                    hit=0;
                                    fin=true;
                                    final(puntos);
-                                   //cancionFinal();
+                                   cancionFinal();
                                    Sleep(200);
                                    tecla=getch();
-                                   //PlaySound(NULL, 0, 0);
+                                   PlaySound(NULL, 0, 0);
                                    break;
                                     }
 
@@ -816,7 +831,7 @@ int main()
             break;
         case 2:
             instrucciones();
-            //cancionInstrucciones();
+            cancionInstrucciones();
             tecla=getch();
             if(tecla==enter)
             {
@@ -828,7 +843,7 @@ int main()
             break;
         case 3:
             creditos();
-            //cancionCred();
+            cancionCred();
             tecla=getch();
             if(tecla==enter)
             {
