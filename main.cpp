@@ -122,13 +122,13 @@ void Nave::muerte()
     if(salud==0){
         borrador();
         gotoxy(x,y);  printf("  **  ");
-        gotoxy(x,y+1);printf(" ** ");
+        gotoxy(x,y+1);printf(" **** ");
         gotoxy(x,y+2);printf("  **  ");
         Sleep(200);
 
         borrador();
         gotoxy(x,y);  printf("* ** *");
-        gotoxy(x,y+1);printf(" ** ");
+        gotoxy(x,y+1);printf(" **** ");
         gotoxy(x,y+2);printf("* ** *");
         Sleep(300);
         borrador();
@@ -146,6 +146,7 @@ class Alien
 private:
     int x;
     float y;
+
 public:
     Alien(int x_,float y_):x(x_),y(y_){}
     void crear();
@@ -205,6 +206,71 @@ void Alien::colision(class Nave &N)
     }
 }
 
+class Jefe
+{
+private:
+    int x;
+    float y;
+
+public:
+    Jefe(int x_,float y_):x(x_),y(y_){}
+    void crear();
+    void mover();
+    void colision(class Nave &N);
+    void borrar();
+    int X();
+    int Y();
+};
+int Jefe::X()
+{
+    return x;
+}
+int Jefe::Y()
+{
+    return y;
+}
+void Jefe::crear()
+{
+
+    cons = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    SetConsoleTextAttribute(cons, 10);
+    gotoxy(x,y);printf("%c",60);
+    SetConsoleTextAttribute(cons, 12);
+    gotoxy(x+1,y);printf("%c",40);
+    gotoxy(x+2,y);printf("%c",41);
+    SetConsoleTextAttribute(cons, 10);
+    gotoxy(x+3,y);printf("%c",62);
+    SetConsoleTextAttribute(cons, 15);
+}
+void Jefe::mover()
+{
+    gotoxy(x,y);printf("     ");
+    y+=0.7;
+    if(y>32)
+    {
+        x = rand()%68+5;
+        y=4;
+    }
+    crear();
+}
+void Jefe::borrar()
+{
+    gotoxy(x,y);printf("    ");
+}
+
+void Jefe::colision(class Nave &N)
+{
+    if(x>=N.X()-3&& x<=N.X()+5 && y>=N.Y()&& y<=N.Y()+3)
+    {
+        N.disminuirCorazon();
+        borrar();
+        N.crear();
+        N.corazon();
+        x = rand()%68+5;
+        y=4;
+    }
+}
 class Disparo{
     int x,y;
 public:
@@ -356,11 +422,11 @@ void creditos()
     cons = GetStdHandle(STD_OUTPUT_HANDLE);
     limpiarPantalla();
     SetConsoleTextAttribute(cons,14);
-    gotoxy(23,1);printf("  __              _ _ _            ");
-    gotoxy(23,2);printf(" / _|_ _ __  _| () |_ _  _ ");
-    gotoxy(23,3);printf("| |   | '_/ _ \\/ _` | | _/ _ \\/ __|");
-    gotoxy(23,4);printf("| |_| | |  _/ (| | | || () \\_ \\");
-    gotoxy(23,5);printf(" \\__||  \\_|\\,||\\\\_/|__/");
+    gotoxy(23,1);printf("  ____              _ _ _            ");
+    gotoxy(23,2);printf(" / ___|_ __ ___  __| (_) |_ ___  ___ ");
+    gotoxy(23,3);printf("| |   | '__/ _ \\/ _` | | __/ _ \\/ __|");
+    gotoxy(23,4);printf("| |___| | |  __/ (_| | | || (_) \\__ \\");
+    gotoxy(23,5);printf(" \\____|_|  \\___|\\__,_|_|\\__\\___/|___/");
     SetConsoleTextAttribute(cons,7);
     gotoxy(20,13);printf("Universidad Autonoma de Baja California Sur");
     gotoxy(17,15);printf("Departamento Academico de Sistemas Computacionales");
@@ -405,7 +471,12 @@ void final(int puntos)
     gotoxy(35,15);printf("PUNTUACION: %d",puntos);
     gotoxy(20,28);printf("Presione ENTER para volver al menu principal");
 }
-
+void terminar(int puntos)
+{
+    system("cls");
+    gotoxy(35,15);printf("Felicidades! Tu puntuacion es de: %d",puntos);
+    gotoxy(20,28);printf("Presione ENTER para volver al menu principal");
+}
 void cancionMenu()
 {
     PlaySound(TEXT("menu.wav"),NULL,SND_ASYNC);
@@ -413,7 +484,7 @@ void cancionMenu()
 
 void cancionCred()
 {
-    PlaySound(TEXT("cred.wav"),NULL,SND_ASYNC);
+    PlaySound(TEXT("CaI.wav"),NULL,SND_ASYNC);
 }
 void cancionJuego()
 {
@@ -421,7 +492,11 @@ void cancionJuego()
 }
 void cancionInstrucciones()
 {
-    PlaySound(TEXT("cred.wav"),NULL,SND_ASYNC);
+    PlaySound(TEXT("CaI.wav"),NULL,SND_ASYNC);
+}
+void cancionFinal()
+{
+    PlaySound(TEXT("final.wav"),NULL,SND_ASYNC);
 }
 void instrucciones()
 {
@@ -431,12 +506,12 @@ void instrucciones()
     cons = GetStdHandle(STD_OUTPUT_HANDLE);
     limpiarPantalla();
     SetConsoleTextAttribute(cons,14);
-     gotoxy(1,1);printf(" ___              _");
-    gotoxy(1,2);printf("|_   |            | |                           ()");
-    gotoxy(1,3);printf("  | |   _ _   __ | |_  _ _  _   _   __   _  _   _   _ _    __  _ ");
-    gotoxy(1,4);printf("  | |  |  _ \\ / _|| _||  _|| | | | / _| / _|| | / _ \\ |  _ \\  / _ \\/ _|");
-    gotoxy(1,5);printf(" | | | | | |\\__ \\| |_ | |   | || || (_ | (_ | || () || | | ||  _/\\_ \\");
-    gotoxy(1,6);printf(" \\__/ || |||_/ \\|||    \\_,| \\__| \\_||| \\__/ || || \\_||__/");
+     gotoxy(1,1);printf(" _____              _");
+    gotoxy(1,2);printf("|_   _|            | |                           (_)");
+    gotoxy(1,3);printf("  | |   _ __   ___ | |_  _ __  _   _   ___   ___  _   ___   _ __    ___  ___ ");
+    gotoxy(1,4);printf("  | |  |  _ \\ / __|| __||  __|| | | | / __| / __|| | / _ \\ |  _ \\  / _ \\/ __|");
+    gotoxy(1,5);printf(" _| |_ | | | |\\__ \\| |_ | |   | |_| || (__ | (__ | || (_) || | | ||  __/\\__ \\");
+    gotoxy(1,6);printf(" \\___/ |_| |_||___/ \\__||_|    \\__,_| \\___| \\___||_| \\___/ |_| |_| \\___||___/");
     SetConsoleTextAttribute(cons,7);
     gotoxy(8,10);printf("El objetivo principal de Moon Cresta es destruir a los alienigenas.");
     gotoxy(27,14);printf("Controles");
@@ -470,10 +545,17 @@ int main()
     list<Disparo*>:: iterator i_Disparo;
     list<Alien*>A;
     list<Alien*>::iterator i_Alien;
+    list<Jefe*>B;
+    list<Jefe*>::iterator boss;
     for(int i=0;i<6;i++)
     {
         //Crea los objetos alien en una lista
         A.push_back(new Alien(rand()%66+4,rand()%5+4));
+    }
+    for(int i=0;i<1;i++)
+    {
+        //Crea los objetos alien en una lista
+        B.push_back(new Jefe(rand()%66+4,rand()%5+4));
     }
     while(men)
     {
@@ -482,14 +564,16 @@ int main()
     limpiarPantalla();
     PlaySound(NULL,NULL,0);
     Nave ob(38,27,3,3);
-    Alien al(10,4);
+
     switch(opcion){
 
         case 1:
             limites();
             puntos=0;
             fin=false;
+
             while(!fin){
+
                 gotoxy(36,0);printf("Nivel %d",fase);
                 if(kbhit())
                 {
@@ -511,11 +595,7 @@ int main()
                     }
                 }
                 //Controla el objeto alien
-                for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
-                {
-                    (*i_Alien)->mover();
-                    (*i_Alien)->colision(ob);
-                }
+
 
                 ob.crear();
                 ob.corazon();
@@ -523,6 +603,11 @@ int main()
                 ob.muerte();
                 if(fase==1)
                 {
+                    for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+                    {
+                        (*i_Alien)->mover();
+                        (*i_Alien)->colision(ob);
+                    }
                     for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
                     {
                     for(i_Disparo=D.begin();i_Disparo!=D.end();i_Disparo++)
@@ -543,7 +628,7 @@ int main()
                     }
                     }
                     SetConsoleTextAttribute(cons,15);
-                    nEnemigos=10;
+                    nEnemigos=1;
                     Sleep(30);
                     gotoxy(5,34);printf("Enemigos Destruidos: %d/%d",destruidos,nEnemigos);
                     score(puntos);
@@ -565,6 +650,11 @@ int main()
                 }
                 if(fase==2)
                 {
+                    for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+                    {
+                        (*i_Alien)->mover();
+                        (*i_Alien)->colision(ob);
+                    }
                     for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
                     {
                     for(i_Disparo=D.begin();i_Disparo!=D.end();i_Disparo++)
@@ -590,7 +680,7 @@ int main()
                     }
                     }
                     SetConsoleTextAttribute(cons,15);
-                    nEnemigos=25;
+                    nEnemigos=2;
                     Sleep(30);
                     gotoxy(5,34);printf("Enemigos Destruidos: %d/%d",destruidos,nEnemigos);
                     score(puntos);
@@ -611,6 +701,11 @@ int main()
                 }
                 if(fase==3)
                 {
+                    for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+                    {
+                        (*i_Alien)->mover();
+                        (*i_Alien)->colision(ob);
+                    }
                     for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
                     {
                     for(i_Disparo=D.begin();i_Disparo!=D.end();i_Disparo++)
@@ -636,9 +731,73 @@ int main()
                     }
                     }
                     SetConsoleTextAttribute(cons,15);
-                    nEnemigos=45;
+                    nEnemigos=3;
                     Sleep(30);
                     gotoxy(5,34);printf("Enemigos Destruidos: %d/%d",destruidos,nEnemigos);
+                    score(puntos);
+                    if(ob.rVidas()==0)
+                    {
+                        fin=true;
+                        final(puntos);
+                        tecla=getch();
+                        if(tecla==enter)
+                        {
+                            break;
+                        }
+                    }
+                    if(destruidos==nEnemigos)
+                    {
+                        fase++;
+                        system("cls");
+                        limites();
+                    }
+                }
+                if(fase==4)
+                {
+
+
+                    for(boss=B.begin();boss!=B.end();boss++)
+                {
+                    (*boss)->mover();
+                    (*boss)->colision(ob);
+                 }
+                 for(boss=B.begin();boss!=B.end();boss++)
+                    {
+                    for(i_Disparo=D.begin();i_Disparo!=D.end();i_Disparo++)
+                    {
+                        if((*boss)->X()==(*i_Disparo)->X()||((*boss)->X()+1==(*i_Disparo)->X()||(*boss)->X()+2==(*i_Disparo)->X()||(*boss)->X()+3==(*i_Disparo)->X())&&((*boss)->Y()+1==(*i_Disparo)->Y()|| (*boss)->Y()==(*i_Disparo)->Y()))
+                           {
+                               gotoxy((*i_Disparo)->X(),(*i_Disparo)->Y());printf(" ");
+                               delete(*i_Disparo);
+                               i_Disparo=D.erase(i_Disparo);
+                               hit++;
+                               if(hit==1)
+                               {
+
+                                   gotoxy((*boss)->X(),(*boss)->Y());printf("    ");
+                                   delete(*boss);
+                                   boss=B.erase(boss);
+                                   puntos+=1000;
+                                   destruidos++;
+                                   hit=0;
+                                   fin=true;
+                                   final(puntos);
+                                   //cancionFinal();
+                                   Sleep(200);
+                                   tecla=getch();
+                                   //PlaySound(NULL, 0, 0);
+                                   break;
+                                    }
+
+                               }
+
+                           }
+                    }
+
+                    SetConsoleTextAttribute(cons,15);
+
+                    Sleep(30);
+                    gotoxy(5,34);printf("JEFE FINAL");
                     score(puntos);
                     if(ob.rVidas()==0)
                     {
