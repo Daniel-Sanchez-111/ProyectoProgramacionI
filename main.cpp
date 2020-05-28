@@ -57,6 +57,7 @@ int Nave::rVidas()
     return vidas;
 }
 //Efectos de sonido in game
+
 void disparoSound()
 {
     PlaySound(TEXT("disparo.wav"),NULL,SND_ASYNC);
@@ -75,13 +76,21 @@ void Nave::crear()
 {
     cons = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    SetConsoleTextAttribute(cons, 1);
-    gotoxy(x,y);  printf("  %c ",94);
     SetConsoleTextAttribute(cons, 8);
-    gotoxy(x,y+1);printf(" %c%c%c ",40,238,41);
-    SetConsoleTextAttribute(cons, 12);
-    gotoxy(x,y+2);printf("  %c ",176);
+    gotoxy(x, y); printf("  %c", 30);
+    SetConsoleTextAttribute(cons, 7);
+    gotoxy(x, y+1); printf("%c   %c", 40, 41);
+    SetConsoleTextAttribute(cons, 11);
+    gotoxy(x+1, y+1); printf(" %c", 207);
+    SetConsoleTextAttribute(cons, 8);
+    gotoxy(x, y+2); printf("%c", 30);
     SetConsoleTextAttribute(cons, 15);
+    gotoxy(x+1, y+2); printf("%c %c",190, 190);
+    SetConsoleTextAttribute(cons, 8);
+    gotoxy(x+4, y+2); printf("%c", 30);
+    SetConsoleTextAttribute(cons, 12);
+    gotoxy(x, y+3); printf(" %c %c  ",176, 176);
+
 }
 //Borra el rastro de la nave
 void Nave::borrador()
@@ -491,6 +500,7 @@ void terminar(int puntos)
     gotoxy(35,15);printf("Felicidades! Tu puntuacion es de: %d",puntos);
     gotoxy(20,28);printf("Presione ENTER para volver al menu principal");
 }
+
 void cancionMenu()
 {
     PlaySound(TEXT("menu.wav"),NULL,SND_ASYNC);
