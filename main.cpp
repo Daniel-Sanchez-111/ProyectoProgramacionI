@@ -376,16 +376,67 @@ int Jefe::Y()
 void Jefe::crear()
 {
 
-    cons = GetStdHandle(STD_OUTPUT_HANDLE);
+   cons = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    SetConsoleTextAttribute(cons, 10);
-    gotoxy(x,y);printf("%c",60);
+    SetConsoleTextAttribute(cons, 8);
+    gotoxy(x,y);  printf("                  ");
+    gotoxy(x+1,y+1);printf("                ");
+    gotoxy(x+2,y+2);printf("              ");
+    gotoxy(x+3,y+3);printf("<|          |>");
+    gotoxy(x+4,y+4);printf("<|        |>");
+    gotoxy(x+5,y+5);printf("<|      |>");
+
+    SetConsoleTextAttribute(cons, 2);
+    gotoxy(x+2,y);printf("%c              %c",178,178);
+    gotoxy(x+3,y+1);printf("%c     %c%c     %c",178,178,178,178);
+    gotoxy(x+4,y+2);printf("%c    %c%c    %c",178,178,178,178);
+    gotoxy(x+5,y+3);printf("%c   %c%c   %c",178,178,178,178);
+    gotoxy(x+6,y+4);printf("%c  %c%c  %c",178,178,178,178);
+    gotoxy(x+7,y+5);printf("%c%c%c%c%c%c",178,178,178,178,178,178);
+
+    SetConsoleTextAttribute(cons, 6);
+    gotoxy(x+2,y-1);printf("%c              %c",190,190);
+    gotoxy(x+3,y);printf("%c     %c%c     %c",190,190,190,190);
+
     SetConsoleTextAttribute(cons, 12);
-    gotoxy(x+1,y);printf("%c",40);
-    gotoxy(x+2,y);printf("%c",41);
-    SetConsoleTextAttribute(cons, 10);
-    gotoxy(x+3,y);printf("%c",62);
-    SetConsoleTextAttribute(cons, 15);
+    gotoxy(x+2,y-2);printf("%c              %c",176,176);
+    gotoxy(x+3,y-1);printf("%c     %c%c     %c",176,176,176,176);
+
+    SetConsoleTextAttribute(cons, 11);
+    gotoxy(x+7,y+6);printf("%c %c%c %c",30,30,30,30);
+    gotoxy(x+9,y+7);printf("%c%c",30,30);
+
+    SetConsoleTextAttribute(cons, 8);
+    gotoxy(x+18,y); printf("][][][] ]");
+    gotoxy(x+17,y+1); printf("][][][]] ]");
+    gotoxy(x+16,y+2); printf("][][][][] ]");
+
+    gotoxy(x-7,y); printf("[ [][][][");
+    gotoxy(x-7,y+1); printf("[ [[][][][");
+    gotoxy(x-7,y+2); printf("[ [][][][][");
+
+    gotoxy(x+24,y+6); printf("[ ]");
+    gotoxy(x-7,y+6); printf("[ ]");
+
+    SetConsoleTextAttribute(cons, 14);
+    gotoxy(x+25,y); printf("I");
+    gotoxy(x+25,y+1); printf("I");
+    gotoxy(x+25,y+2); printf("I");
+    gotoxy(x+25,y+3); printf("I");
+    gotoxy(x+25,y+4); printf("I");
+    gotoxy(x+25,y+5); printf("I");
+
+    gotoxy(x-6,y); printf("I");
+    gotoxy(x-6,y+1); printf("I");
+    gotoxy(x-6,y+2); printf("I");
+    gotoxy(x-6,y+3); printf("I");
+    gotoxy(x-6,y+4); printf("I");
+    gotoxy(x-6,y+5); printf("I");
+
+    SetConsoleTextAttribute(cons, 13);
+    gotoxy(x+25,y+6); printf("I");
+    gotoxy(x-6,y+6); printf("I");
+
 }
 void Jefe::mover()
 {
