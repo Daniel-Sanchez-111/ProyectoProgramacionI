@@ -34,10 +34,7 @@ void muertesound()
 {
     PlaySound(TEXT("muerte.wav"),NULL,SND_ASYNC);
 }
-void colisionSound()
-{
-    PlaySound(TEXT("selec.wav"),NULL,SND_ASYNC);
-}
+
 class Nave
 {
     int x,y;
@@ -143,6 +140,7 @@ void Nave::disminuirCorazon()
 }
 bool Nave::muerte()
 {
+    SetConsoleTextAttribute(cons,15);
     if(salud==0){
         borrador();
         gotoxy(x,y);  printf("  **  ");
@@ -191,9 +189,7 @@ int Alien::Y()
 }
 void Alien::crear()
 {
-
     cons = GetStdHandle(STD_OUTPUT_HANDLE);
-
     SetConsoleTextAttribute(cons, 10);
     gotoxy(x,y);printf("%c",60);
     SetConsoleTextAttribute(cons, 12);
@@ -220,7 +216,7 @@ void Alien::borrar()
 }
 void Alien::colision(class Nave &N)
 {
-    if(x>=N.X()-3&& x<=N.X()+5 && y>=N.Y()&& y<=N.Y()+3)
+    if(x>=N.X()-4&& x<=N.X()+5 && y>=N.Y()&& y<=N.Y()+4)
     {
         N.disminuirCorazon();
         borrar();
@@ -230,7 +226,130 @@ void Alien::colision(class Nave &N)
         y=4;
     }
 }
+class Alien2
+{
+private:
+    int x;
+    float y;
 
+public:
+    Alien2(int x_,float y_):x(x_),y(y_){}
+    void crear();
+    void mover();
+    void colision(class Nave &N);
+    void borrar();
+    int X();
+    int Y();
+};
+int Alien2::X()
+{
+    return x;
+}
+int Alien2::Y()
+{
+    return y;
+}
+void Alien2::crear()
+{
+    cons = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(cons, 13);
+    gotoxy(x,y);printf("%c",195);
+    SetConsoleTextAttribute(cons, 11);
+    gotoxy(x+1,y);printf("%c",91);
+    gotoxy(x+2,y);printf("%c",93);
+    SetConsoleTextAttribute(cons, 13);
+    gotoxy(x+3,y);printf("%c",180);
+    SetConsoleTextAttribute(cons, 15);
+}
+void Alien2::mover()
+{
+    gotoxy(x,y);printf("     ");
+    y+=0.7;
+    if(y>32)
+    {
+        x = rand()%66+4;
+        y=4;
+    }
+    crear();
+}
+void Alien2::borrar()
+{
+    gotoxy(x,y);printf("    ");
+}
+void Alien2::colision(class Nave &N)
+{
+    if(x>=N.X()-4&& x<=N.X()+5 && y>=N.Y()&& y<=N.Y()+4)
+    {
+        N.disminuirCorazon();
+        borrar();
+        N.crear();
+        N.corazon();
+        x = rand()%68+5;
+        y=4;
+    }
+}
+class Alien3
+{
+private:
+    int x;
+    float y;
+
+public:
+    Alien3(int x_,float y_):x(x_),y(y_){}
+    void crear();
+    void mover();
+    void colision(class Nave &N);
+    void borrar();
+    int X();
+    int Y();
+};
+int Alien3::X()
+{
+    return x;
+}
+int Alien3::Y()
+{
+    return y;
+}
+void Alien3::crear()
+{
+    cons = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(cons, 14);
+    gotoxy(x,y);printf("%c",174);
+    SetConsoleTextAttribute(cons, 10);
+    gotoxy(x+1,y);printf("%c",203);
+    gotoxy(x+2,y);printf("%c",203);
+    SetConsoleTextAttribute(cons, 14);
+    gotoxy(x+3,y);printf("%c",175);
+    SetConsoleTextAttribute(cons, 15);
+}
+void Alien3::mover()
+{
+    gotoxy(x,y);printf("     ");
+    y+=0.7;
+    if(y>32)
+    {
+        x = rand()%66+4;
+        y=4;
+    }
+    crear();
+}
+void Alien3::borrar()
+{
+    gotoxy(x,y);printf("    ");
+}
+void Alien3::colision(class Nave &N)
+{
+    if(x>=N.X()-4&& x<=N.X()+5 && y>=N.Y()&& y<=N.Y()+4)
+    {
+        N.disminuirCorazon();
+        borrar();
+        N.crear();
+        N.corazon();
+        x = rand()%68+5;
+        y=4;
+    }
+}
 class Jefe
 {
 private:
@@ -286,10 +405,9 @@ void Jefe::borrar()
 
 void Jefe::colision(class Nave &N)
 {
-    if(x>=N.X()-3&& x<=N.X()+5 && y>=N.Y()&& y<=N.Y()+3)
+    if(x>=N.X()-4&& x<=N.X()+5 && y>=N.Y()&& y<=N.Y()+4)
     {
         N.disminuirCorazon();
-        colisionSound();
         borrar();
         N.crear();
         N.corazon();
@@ -675,14 +793,12 @@ int main()
     int n = 4;
     int destruidos=0;
     int nEnemigos=0;
-    int fase=1;
+    int fase=0;
     int tecla;
     int opcion;
     bool muerto=false;
     bool fin = false;
     bool men = true;
-    bool dis1 = false;
-    bool dis2=false;
     list<Disparo*> D;
     list<Disparo*>:: iterator i_Disparo;
     list<DisparoF2*> D2;
@@ -691,12 +807,26 @@ int main()
     list<DisparoF3*>:: iterator i_Disparo3;
     list<Alien*>A;
     list<Alien*>::iterator i_Alien;
+    list<Alien2*>A2;
+    list<Alien2*>::iterator i_Alien2;
+    list<Alien3*>A3;
+    list<Alien3*>::iterator i_Alien3;
     list<Jefe*>B;
     list<Jefe*>::iterator boss;
     for(int i=0;i<9;i++)
     {
         //Crea los objetos alien en una lista
         A.push_back(new Alien(rand()%66+4,rand()%5+4));
+    }
+    for(int i=0;i<9;i++)
+    {
+        //Crea los objetos alien en una lista
+        A2.push_back(new Alien2(rand()%66+4,rand()%5+4));
+    }
+    for(int i=0;i<9;i++)
+    {
+        //Crea los objetos alien en una lista
+        A3.push_back(new Alien3(rand()%66+4,rand()%5+4));
     }
     for(int i=0;i<1;i++)
     {
@@ -720,12 +850,18 @@ int main()
 
             while(!fin){
                 estrellas();
-                gotoxy(36,0);printf("Nivel %d",fase);
                 //Controla el objeto alien
                 ob.crear();
                 ob.corazon();
                 ob.mover();
                 ob.muerte();
+                score(puntos);
+                if(fase==0)
+                {
+                    Sleep(2000);
+                    fase++;
+                }
+                gotoxy(36,0);printf("Nivel %d",fase);
                 if(fase==1)
                 {
                     if(ob.rVidas()==3)
@@ -866,15 +1002,17 @@ int main()
                     }
 
                     SetConsoleTextAttribute(cons,15);
-                    nEnemigos=20;
+                    nEnemigos=3;
                     Sleep(30);
                     gotoxy(5,34);printf("Enemigos Destruidos: %d/%d",destruidos,nEnemigos);
-                    score(puntos);
+
                     if(ob.rVidas()==0)
                     {
                         fin=true;
                         final(puntos);
+                        Sleep(100);
                         tecla=getch();
+                        fase=0;
                         if(tecla==enter)
                         {
                             break;
@@ -940,11 +1078,11 @@ int main()
                             i_Disparo3=D3.erase(i_Disparo3);
                         }
                     }
-                    for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+                    for(i_Alien2=A2.begin();i_Alien2!=A2.end();i_Alien2++)
                     {
                     for(i_Disparo2=D2.begin();i_Disparo2!=D2.end();i_Disparo2++)
                     {
-                        if((*i_Alien)->X()==(*i_Disparo2)->X()||((*i_Alien)->X()+1==(*i_Disparo2)->X()||(*i_Alien)->X()+2==(*i_Disparo2)->X()||(*i_Alien)->X()+3==(*i_Disparo2)->X())&&((*i_Alien)->Y()+1==(*i_Disparo2)->Y()|| (*i_Alien)->Y()==(*i_Disparo2)->Y()))
+                        if((*i_Alien2)->X()==(*i_Disparo2)->X()||((*i_Alien2)->X()+1==(*i_Disparo2)->X()||(*i_Alien2)->X()+2==(*i_Disparo2)->X()||(*i_Alien2)->X()+3==(*i_Disparo2)->X())&&((*i_Alien2)->Y()+1==(*i_Disparo2)->Y()|| (*i_Alien2)->Y()==(*i_Disparo2)->Y()))
                            {
                                gotoxy((*i_Disparo2)->X(),(*i_Disparo2)->Y());printf(" ");
                                delete(*i_Disparo2);
@@ -952,10 +1090,10 @@ int main()
                                hit++;
                                if(hit==3)
                                {
-                                   A.push_back(new Alien(rand()%66+4,4));
-                                   gotoxy((*i_Alien)->X(),(*i_Alien)->Y());printf("    ");
-                                   delete(*i_Alien);
-                                   i_Alien=A.erase(i_Alien);
+                                   A2.push_back(new Alien2(rand()%66+4,4));
+                                   gotoxy((*i_Alien2)->X(),(*i_Alien2)->Y());printf("    ");
+                                   delete(*i_Alien2);
+                                   i_Alien2=A2.erase(i_Alien2);
                                    puntos+=20;
                                    destruidos++;
                                    hit=0;
@@ -964,11 +1102,11 @@ int main()
                            }
                     }
                     }
-                    for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+                    for(i_Alien2=A2.begin();i_Alien2!=A2.end();i_Alien2++)
                     {
                     for(i_Disparo3=D3.begin();i_Disparo3!=D3.end();i_Disparo3++)
                     {
-                        if((*i_Alien)->X()==(*i_Disparo3)->X()||((*i_Alien)->X()+1==(*i_Disparo3)->X()||(*i_Alien)->X()+2==(*i_Disparo3)->X()||(*i_Alien)->X()+3==(*i_Disparo3)->X())&&((*i_Alien)->Y()+1==(*i_Disparo3)->Y()|| (*i_Alien)->Y()==(*i_Disparo3)->Y()))
+                        if((*i_Alien2)->X()==(*i_Disparo3)->X()||((*i_Alien2)->X()+1==(*i_Disparo3)->X()||(*i_Alien2)->X()+2==(*i_Disparo3)->X()||(*i_Alien2)->X()+3==(*i_Disparo3)->X())&&((*i_Alien2)->Y()+1==(*i_Disparo3)->Y()|| (*i_Alien2)->Y()==(*i_Disparo3)->Y()))
                            {
                                gotoxy((*i_Disparo3)->X(),(*i_Disparo3)->Y());printf(" ");
                                delete(*i_Disparo3);
@@ -976,10 +1114,10 @@ int main()
                                hit++;
                                if(hit==3)
                                {
-                                   A.push_back(new Alien(rand()%66+4,4));
-                                   gotoxy((*i_Alien)->X(),(*i_Alien)->Y());printf("    ");
-                                   delete(*i_Alien);
-                                   i_Alien=A.erase(i_Alien);
+                                   A2.push_back(new Alien2(rand()%66+4,4));
+                                   gotoxy((*i_Alien2)->X(),(*i_Alien2)->Y());printf("    ");
+                                   delete(*i_Alien2);
+                                   i_Alien2=A2.erase(i_Alien2);
                                    puntos+=20;
                                    destruidos++;
                                    hit=0;
@@ -999,11 +1137,11 @@ int main()
                             i_Disparo=D.erase(i_Disparo);
                         }
                     }
-                    for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+                    for(i_Alien2=A2.begin();i_Alien2!=A2.end();i_Alien2++)
                     {
                     for(i_Disparo=D.begin();i_Disparo!=D.end();i_Disparo++)
                     {
-                        if((*i_Alien)->X()==(*i_Disparo)->X()||((*i_Alien)->X()+1==(*i_Disparo)->X()||(*i_Alien)->X()+2==(*i_Disparo)->X()||(*i_Alien)->X()+3==(*i_Disparo)->X())&&((*i_Alien)->Y()+1==(*i_Disparo)->Y()|| (*i_Alien)->Y()==(*i_Disparo)->Y()))
+                        if((*i_Alien2)->X()==(*i_Disparo)->X()||((*i_Alien2)->X()+1==(*i_Disparo)->X()||(*i_Alien2)->X()+2==(*i_Disparo)->X()||(*i_Alien2)->X()+3==(*i_Disparo)->X())&&((*i_Alien2)->Y()+1==(*i_Disparo)->Y()|| (*i_Alien2)->Y()==(*i_Disparo)->Y()))
                            {
                                gotoxy((*i_Disparo)->X(),(*i_Disparo)->Y());printf(" ");
                                delete(*i_Disparo);
@@ -1011,10 +1149,10 @@ int main()
                                hit++;
                                if(hit==3)
                                {
-                                   A.push_back(new Alien(rand()%66+4,4));
-                                   gotoxy((*i_Alien)->X(),(*i_Alien)->Y());printf("    ");
-                                   delete(*i_Alien);
-                                   i_Alien=A.erase(i_Alien);
+                                   A2.push_back(new Alien2(rand()%66+4,4));
+                                   gotoxy((*i_Alien2)->X(),(*i_Alien2)->Y());printf("    ");
+                                   delete(*i_Alien2);
+                                   i_Alien2=A2.erase(i_Alien2);
                                    puntos+=10;
                                    destruidos++;
                                    hit=0;
@@ -1022,15 +1160,13 @@ int main()
                            }
                     }
                     }
-                    for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+                    for(i_Alien2=A2.begin();i_Alien2!=A2.end();i_Alien2++)
                     {
-                        (*i_Alien)->mover();
-                        (*i_Alien)->colision(ob);
+                        (*i_Alien2)->mover();
+                        (*i_Alien2)->colision(ob);
                     }
-
-
                     SetConsoleTextAttribute(cons,15);
-                    nEnemigos=30;
+                    nEnemigos=7;
                     Sleep(30);
                     gotoxy(5,34);printf("Enemigos Destruidos: %d/%d",destruidos,nEnemigos);
                     score(puntos);
@@ -1039,6 +1175,7 @@ int main()
                         fin=true;
                         final(puntos);
                         tecla=getch();
+                        fase=0;
                         if(tecla==enter)
                         {
                             break;
@@ -1103,11 +1240,11 @@ int main()
                             i_Disparo3=D3.erase(i_Disparo3);
                         }
                     }
-                    for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+                    for(i_Alien3=A3.begin();i_Alien3!=A3.end();i_Alien3++)
                     {
                     for(i_Disparo2=D2.begin();i_Disparo2!=D2.end();i_Disparo2++)
                     {
-                        if((*i_Alien)->X()==(*i_Disparo2)->X()||((*i_Alien)->X()+1==(*i_Disparo2)->X()||(*i_Alien)->X()+2==(*i_Disparo2)->X()||(*i_Alien)->X()+3==(*i_Disparo2)->X())&&((*i_Alien)->Y()+1==(*i_Disparo2)->Y()|| (*i_Alien)->Y()==(*i_Disparo2)->Y()))
+                        if((*i_Alien3)->X()==(*i_Disparo2)->X()||((*i_Alien3)->X()+1==(*i_Disparo2)->X()||(*i_Alien3)->X()+2==(*i_Disparo2)->X()||(*i_Alien3)->X()+3==(*i_Disparo2)->X())&&((*i_Alien3)->Y()+1==(*i_Disparo2)->Y()|| (*i_Alien3)->Y()==(*i_Disparo2)->Y()))
                            {
                                gotoxy((*i_Disparo2)->X(),(*i_Disparo2)->Y());printf(" ");
                                delete(*i_Disparo2);
@@ -1115,10 +1252,10 @@ int main()
                                hit++;
                                if(hit==6)
                                {
-                                   A.push_back(new Alien(rand()%66+4,4));
-                                   gotoxy((*i_Alien)->X(),(*i_Alien)->Y());printf("    ");
-                                   delete(*i_Alien);
-                                   i_Alien=A.erase(i_Alien);
+                                   A3.push_back(new Alien3(rand()%66+4,4));
+                                   gotoxy((*i_Alien3)->X(),(*i_Alien3)->Y());printf("    ");
+                                   delete(*i_Alien3);
+                                   i_Alien3=A3.erase(i_Alien3);
                                    puntos+=20;
                                    destruidos++;
                                    hit=0;
@@ -1127,11 +1264,11 @@ int main()
                            }
                     }
                     }
-                    for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+                    for(i_Alien3=A3.begin();i_Alien3!=A3.end();i_Alien3++)
                     {
                     for(i_Disparo3=D3.begin();i_Disparo3!=D3.end();i_Disparo3++)
                     {
-                        if((*i_Alien)->X()==(*i_Disparo3)->X()||((*i_Alien)->X()+1==(*i_Disparo3)->X()||(*i_Alien)->X()+2==(*i_Disparo3)->X()||(*i_Alien)->X()+3==(*i_Disparo3)->X())&&((*i_Alien)->Y()+1==(*i_Disparo3)->Y()|| (*i_Alien)->Y()==(*i_Disparo3)->Y()))
+                        if((*i_Alien3)->X()==(*i_Disparo3)->X()||((*i_Alien3)->X()+1==(*i_Disparo3)->X()||(*i_Alien3)->X()+2==(*i_Disparo3)->X()||(*i_Alien3)->X()+3==(*i_Disparo3)->X())&&((*i_Alien3)->Y()+1==(*i_Disparo3)->Y()|| (*i_Alien3)->Y()==(*i_Disparo3)->Y()))
                            {
                                gotoxy((*i_Disparo3)->X(),(*i_Disparo3)->Y());printf(" ");
                                delete(*i_Disparo3);
@@ -1139,10 +1276,10 @@ int main()
                                hit++;
                                if(hit==6)
                                {
-                                   A.push_back(new Alien(rand()%66+4,4));
-                                   gotoxy((*i_Alien)->X(),(*i_Alien)->Y());printf("    ");
-                                   delete(*i_Alien);
-                                   i_Alien=A.erase(i_Alien);
+                                   A3.push_back(new Alien3(rand()%66+4,4));
+                                   gotoxy((*i_Alien3)->X(),(*i_Alien3)->Y());printf("    ");
+                                   delete(*i_Alien3);
+                                   i_Alien3=A3.erase(i_Alien3);
                                    puntos+=20;
                                    destruidos++;
                                    hit=0;
@@ -1162,11 +1299,11 @@ int main()
                             i_Disparo=D.erase(i_Disparo);
                         }
                     }
-                    for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+                    for(i_Alien3=A3.begin();i_Alien3!=A3.end();i_Alien3++)
                     {
                     for(i_Disparo=D.begin();i_Disparo!=D.end();i_Disparo++)
                     {
-                        if((*i_Alien)->X()==(*i_Disparo)->X()||((*i_Alien)->X()+1==(*i_Disparo)->X()||(*i_Alien)->X()+2==(*i_Disparo)->X()||(*i_Alien)->X()+3==(*i_Disparo)->X())&&((*i_Alien)->Y()+1==(*i_Disparo)->Y()|| (*i_Alien)->Y()==(*i_Disparo)->Y()))
+                        if((*i_Alien3)->X()==(*i_Disparo)->X()||((*i_Alien3)->X()+1==(*i_Disparo)->X()||(*i_Alien3)->X()+2==(*i_Disparo)->X()||(*i_Alien3)->X()+3==(*i_Disparo)->X())&&((*i_Alien3)->Y()+1==(*i_Disparo)->Y()|| (*i_Alien3)->Y()==(*i_Disparo)->Y()))
                            {
                                gotoxy((*i_Disparo)->X(),(*i_Disparo)->Y());printf(" ");
                                delete(*i_Disparo);
@@ -1174,10 +1311,10 @@ int main()
                                hit++;
                                if(hit==6)
                                {
-                                   A.push_back(new Alien(rand()%66+4,4));
-                                   gotoxy((*i_Alien)->X(),(*i_Alien)->Y());printf("    ");
-                                   delete(*i_Alien);
-                                   i_Alien=A.erase(i_Alien);
+                                   A3.push_back(new Alien3(rand()%66+4,4));
+                                   gotoxy((*i_Alien3)->X(),(*i_Alien3)->Y());printf("    ");
+                                   delete(*i_Alien3);
+                                   i_Alien3=A3.erase(i_Alien3);
                                    puntos+=10;
                                    destruidos++;
                                    hit=0;
@@ -1185,10 +1322,10 @@ int main()
                            }
                     }
                     }
-                    for(i_Alien=A.begin();i_Alien!=A.end();i_Alien++)
+                    for(i_Alien3=A3.begin();i_Alien3!=A3.end();i_Alien3++)
                     {
-                        (*i_Alien)->mover();
-                        (*i_Alien)->colision(ob);
+                        (*i_Alien3)->mover();
+                        (*i_Alien3)->colision(ob);
                     }
 
                     SetConsoleTextAttribute(cons,15);
@@ -1201,6 +1338,7 @@ int main()
                         fin=true;
                         final(puntos);
                         tecla=getch();
+                        fase=0;
                         if(tecla==enter)
                         {
                             break;
