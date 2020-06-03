@@ -154,15 +154,16 @@ bool Nave::muerte()
         gotoxy(x,y);  printf("* ** *");
         gotoxy(x,y+1);printf(" **** ");
         gotoxy(x,y+2);printf("* ** *");
+        muertesound();
         Sleep(300);
         borrador();
         vidas--;
         salud=3;
-        muertesound();
         corazon();
         crear();
     }
-    return true;
+
+
 }
 
 class Alien
