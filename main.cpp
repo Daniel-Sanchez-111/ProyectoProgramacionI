@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <list>
+#include <thread>
 
 #define izquierda 75
 #define derecha 77
@@ -34,7 +35,6 @@ void muertesound()
 {
     PlaySound(TEXT("muerte.wav"),NULL,SND_ASYNC);
 }
-
 class Nave
 {
     int x,y;
@@ -49,7 +49,7 @@ public:
     void mover();
     void corazon();
     void disminuirCorazon();
-    bool muerte();
+    void muerte();
     int rVidas();
     int rSalud();
 };
@@ -138,7 +138,7 @@ void Nave::disminuirCorazon()
 {
     salud--;
 }
-bool Nave::muerte()
+void Nave::muerte()
 {
     SetConsoleTextAttribute(cons,15);
     if(salud==0){
@@ -575,21 +575,28 @@ void estrellas() {
     gotoxy(23, 19); cout << "+";
 }
 
+void cancionM(){
+    PlaySound(TEXT("menu.wav"),NULL,SND_ASYNC);
+}
+void seleccion(){
+    Beep(1000,100);
+}
 //Funcion para crear el menu
 int menu(const char *titulo,const char *opciones[],int n)
 {
+
     cons = GetStdHandle(STD_OUTPUT_HANDLE);
     int opcionSeleccionada=1;
     int tecla;
     bool repetir = true;
-
+    system("cls");
     while(repetir)
     {
 
-        system("cls");
         estrellas();
         SetConsoleTextAttribute(cons,14);
         gotoxy(33,20+opcionSeleccionada);printf("-->");
+        gotoxy(33,19+opcionSeleccionada);printf("   ");
         gotoxy(4,5);printf("#     #                          #####                                    ");
         gotoxy(4,6);printf("##   ##  ####   ####  #    #    #     # #####  ######  ####  #####   ##   ");
         gotoxy(4,7);printf("# # # # #    # #    # ##   #    #       #    # #      #        #    #  #  ");
@@ -613,16 +620,27 @@ int menu(const char *titulo,const char *opciones[],int n)
                 opcionSeleccionada--;
                 if(opcionSeleccionada<1)
                 {
+                    gotoxy(33,21);printf("   ");
                     opcionSeleccionada = n;
                 }
                 break;
             case abajo:
+                {
+
+
                 opcionSeleccionada++;
+                thread selecMenu(seleccion);
                 if(opcionSeleccionada>n)
                 {
+                    gotoxy(33,24);printf("   ");
                     opcionSeleccionada=1;
                 }
+                if(selecMenu.joinable()) {
+                    selecMenu.join();
+
+                }
                 break;
+                }
             case enter:
                 repetir=false;
                 system("cls");
@@ -630,6 +648,7 @@ int menu(const char *titulo,const char *opciones[],int n)
         }
 
     }
+
 
     SetConsoleTextAttribute(cons,15);
     return opcionSeleccionada;
@@ -710,10 +729,7 @@ void terminar(int puntos)
     gotoxy(20,28);printf("Presione ENTER para volver al menu principal");
     Sleep(200);
 }
-void cancionMenu()
-{
-    PlaySound(TEXT("menu.wav"),NULL,SND_ASYNC);
-}
+
 
 void cancionCred()
 {
@@ -834,11 +850,15 @@ int main()
     }
     while(men)
     {
-    //cancionMenu();
+    thread menuS(cancionM);
+
     opcion = menu(titulo,opciones,n);
     limpiarPantalla();
     PlaySound(NULL,NULL,0);
     Nave ob(38,27,3,3);
+    if(menuS.joinable()) {
+        menuS.join();
+    }
 
     switch(opcion){
 
@@ -1431,6 +1451,7 @@ int main()
             tecla=getch();
             if(tecla==enter)
             {
+
                 break;
             }else
             {
