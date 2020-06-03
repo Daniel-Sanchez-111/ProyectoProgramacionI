@@ -24,12 +24,22 @@ void gotoxy(int x, int y){
     SetConsoleCursorPosition(consola,pos);
 
 }
+void jefeMSound()
+{
+    for (int i=0; i<8;i++){
+        PlaySound(TEXT("jefeM.wav"),NULL,SND_ASYNC);
+    }
+}
 //Clase para crear al alien
 
 //Clase para crear la nave
 void disparoSound()
 {
     PlaySound(TEXT("disparo.wav"),NULL,SND_ASYNC);
+}
+void disparoSound2()
+{
+    PlaySound(TEXT("disparo4.wav"),NULL,SND_ASYNC);
 }
 void muertesound()
 {
@@ -149,10 +159,10 @@ void Nave::muerte()
         Sleep(200);
 
         borrador();
+        muertesound();
         gotoxy(x,y);  printf("* ** *");
         gotoxy(x,y+1);printf(" **** ");
         gotoxy(x,y+2);printf("* ** *");
-        muertesound();
         Sleep(300);
         borrador();
         vidas--;
@@ -671,7 +681,7 @@ int menu(const char *titulo,const char *opciones[],int n)
                 opcionSeleccionada--;
                 if(opcionSeleccionada<1)
                 {
-                    gotoxy(33,21);printf("   ");
+                    gotoxy(33,20);printf("   ");
                     opcionSeleccionada = n;
                 }
                 break;
@@ -784,7 +794,7 @@ void terminar(int puntos)
 
 void cancionCred()
 {
-    PlaySound(TEXT("CaI.wav"),NULL,SND_ASYNC);
+    PlaySound(TEXT("cred.wav"),NULL,SND_ASYNC);
 }
 void cancionJuego()
 {
@@ -947,7 +957,7 @@ int main()
                        if(GetAsyncKeyState(0x20)){
                             D2.push_back(new DisparoF2(ob.X(), ob.Y()));
                             D3.push_back(new DisparoF3(ob.X()+4, ob.Y()));
-                            disparoSound();
+                            disparoSound2();
                         }
                     }
                     if(ob.rVidas()==1)
@@ -959,7 +969,7 @@ int main()
                         if(GetAsyncKeyState(0x20)){
                             D2.push_back(new DisparoF2(ob.X(), ob.Y()));
                             D3.push_back(new DisparoF3(ob.X()+4, ob.Y()));
-                            disparoSound();
+                            disparoSound2();
                         }
                     }
                     for(i_Disparo2=D2.begin();i_Disparo2!=D2.end();i_Disparo2++)
@@ -1112,7 +1122,7 @@ int main()
                        if(GetAsyncKeyState(0x20)){
                             D2.push_back(new DisparoF2(ob.X(), ob.Y()));
                             D3.push_back(new DisparoF3(ob.X()+4, ob.Y()));
-                            disparoSound();
+                            disparoSound2();
                         }
                     }
                     if(ob.rVidas()==1)
@@ -1124,7 +1134,7 @@ int main()
                         if(GetAsyncKeyState(0x20)){
                             D2.push_back(new DisparoF2(ob.X(), ob.Y()));
                             D3.push_back(new DisparoF3(ob.X()+4, ob.Y()));
-                            disparoSound();
+                            disparoSound2();
                         }
                     }
                     for(i_Disparo2=D2.begin();i_Disparo2!=D2.end();i_Disparo2++)
@@ -1274,7 +1284,7 @@ int main()
                        if(GetAsyncKeyState(0x20)){
                             D2.push_back(new DisparoF2(ob.X(), ob.Y()));
                             D3.push_back(new DisparoF3(ob.X()+4, ob.Y()));
-                            disparoSound();
+                            disparoSound2();
                         }
                     }
                     if(ob.rVidas()==1)
@@ -1286,7 +1296,7 @@ int main()
                         if(GetAsyncKeyState(0x20)){
                             D2.push_back(new DisparoF2(ob.X(), ob.Y()));
                             D3.push_back(new DisparoF3(ob.X()+4, ob.Y()));
-                            disparoSound();
+                            disparoSound2();
                         }
                     }
                     for(i_Disparo2=D2.begin();i_Disparo2!=D2.end();i_Disparo2++)
@@ -1400,7 +1410,7 @@ int main()
                     }
 
                     SetConsoleTextAttribute(cons,15);
-                    nEnemigos=3;
+                    nEnemigos=11;
                     Sleep(30);
                     gotoxy(5,34);printf("Enemigos Destruidos: %d/%d",destruidos,nEnemigos);
                     score(puntos);
@@ -1426,7 +1436,6 @@ int main()
                 if(fase==4)
                 {
 
-
                     for(boss=B.begin();boss!=B.end();boss++)
                 {
                     (*boss)->mover();
@@ -1450,13 +1459,14 @@ int main()
                                    boss=B.erase(boss);
                                    puntos+=1000;
                                    destruidos++;
+                                   jefeMSound();
                                    hit=0;
                                    fin=true;
                                    Sleep(200);
                                    final(puntos);
-                                   //cancionFinal();
+                                   cancionFinal();
                                    tecla=getch();
-                                   //PlaySound(NULL, 0, 0);
+                                   PlaySound(NULL, 0, 0);
                                    break;
                                     }
 
@@ -1486,7 +1496,7 @@ int main()
             break;
         case 2:
             instrucciones();
-            //cancionInstrucciones();
+            cancionInstrucciones();
             tecla=getch();
             if(tecla==enter)
             {
@@ -1498,7 +1508,7 @@ int main()
             break;
         case 3:
             creditos();
-            //cancionCred();
+            cancionCred();
             tecla=getch();
             if(tecla==enter)
             {
