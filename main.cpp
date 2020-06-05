@@ -24,12 +24,6 @@ void gotoxy(int x, int y){
     SetConsoleCursorPosition(consola,pos);
 
 }
-void jefeMSound()
-{
-    for (int i=0; i<8;i++){
-        PlaySound(TEXT("jefeM.wav"),NULL,SND_ASYNC);
-    }
-}
 //Clase para crear al alien
 
 //Clase para crear la nave
@@ -151,7 +145,7 @@ void Nave::disminuirCorazon()
 void Nave::muerte()
 {
     SetConsoleTextAttribute(cons,15);
-    if(salud==0){
+    if(salud<=0){
         borrador();
         gotoxy(x,y);  printf("  **  ");
         gotoxy(x,y+1);printf(" **** ");
@@ -159,10 +153,10 @@ void Nave::muerte()
         Sleep(200);
 
         borrador();
-        muertesound();
         gotoxy(x,y);  printf("* ** *");
         gotoxy(x,y+1);printf(" **** ");
         gotoxy(x,y+2);printf("* ** *");
+        muertesound();
         Sleep(300);
         borrador();
         vidas--;
@@ -386,7 +380,7 @@ int Jefe::Y()
 void Jefe::crear()
 {
 
-   cons = GetStdHandle(STD_OUTPUT_HANDLE);
+    cons = GetStdHandle(STD_OUTPUT_HANDLE);
 
     SetConsoleTextAttribute(cons, 8);
     gotoxy(x,y);  printf("                  ");
@@ -450,12 +444,21 @@ void Jefe::crear()
 }
 void Jefe::mover()
 {
-    gotoxy(x,y);printf("     ");
-    y+=0.7;
-    if(y>32)
+    gotoxy(x-7,y-2);printf("                                  ");
+    gotoxy(x-7,y-1);printf("                                  ");
+    gotoxy(x-7,y);printf("                                  ");
+    gotoxy(x-7,y+1);printf("                                  ");
+    gotoxy(x-7,y+2);printf("                                  ");
+    gotoxy(x-7,y+3);printf("                                  ");
+    gotoxy(x-7,y+4);printf("                                  ");
+    gotoxy(x-7,y+5);printf("                                  ");
+    gotoxy(x-7,y+6);printf("                                  ");
+    gotoxy(x-7,y+7);printf("                                  ");
+    y+=0.8;
+    if(y+6>32)
     {
-        x = rand()%68+5;
-        y=4;
+        x = rand()%41+10;
+        y=6;
     }
     crear();
 }
@@ -678,12 +681,16 @@ int menu(const char *titulo,const char *opciones[],int n)
         switch(tecla)
         {
             case arriba:
-                opcionSeleccionada--;
-                if(opcionSeleccionada<1)
                 {
-                    gotoxy(33,20);printf("   ");
-                    opcionSeleccionada = n;
+                    opcionSeleccionada--;
+                    thread selecMenu(seleccion);
+                    if(opcionSeleccionada<1)
+                    {
+                        gotoxy(33,21);printf("   ");
+                        opcionSeleccionada = n;
+                    }
                 }
+
                 break;
             case abajo:
                 {
@@ -794,7 +801,7 @@ void terminar(int puntos)
 
 void cancionCred()
 {
-    PlaySound(TEXT("cred.wav"),NULL,SND_ASYNC);
+    PlaySound(TEXT("CaI.wav"),NULL,SND_ASYNC);
 }
 void cancionJuego()
 {
@@ -911,15 +918,15 @@ int main()
     }
     while(men)
     {
-    thread menuS(cancionM);
+    //thread menuS(cancionM);
 
     opcion = menu(titulo,opciones,n);
     limpiarPantalla();
     PlaySound(NULL,NULL,0);
     Nave ob(38,27,3,3);
-    if(menuS.joinable()) {
+    /*if(menuS.joinable()) {
         menuS.join();
-    }
+    }*/
 
     switch(opcion){
 
@@ -1083,7 +1090,7 @@ int main()
                     }
 
                     SetConsoleTextAttribute(cons,15);
-                    nEnemigos=3;
+                    nEnemigos=10;
                     Sleep(30);
                     gotoxy(5,34);printf("Enemigos Destruidos: %d/%d",destruidos,nEnemigos);
 
@@ -1247,7 +1254,7 @@ int main()
                         (*i_Alien2)->colision(ob);
                     }
                     SetConsoleTextAttribute(cons,15);
-                    nEnemigos=7;
+                    nEnemigos=20;
                     Sleep(30);
                     gotoxy(5,34);printf("Enemigos Destruidos: %d/%d",destruidos,nEnemigos);
                     score(puntos);
@@ -1410,7 +1417,7 @@ int main()
                     }
 
                     SetConsoleTextAttribute(cons,15);
-                    nEnemigos=11;
+                    nEnemigos=30;
                     Sleep(30);
                     gotoxy(5,34);printf("Enemigos Destruidos: %d/%d",destruidos,nEnemigos);
                     score(puntos);
@@ -1435,7 +1442,137 @@ int main()
                 }
                 if(fase==4)
                 {
+                    if(ob.rVidas()==3)
+                    {
+                        if(GetAsyncKeyState(0x43)){
+                            D.push_back(new Disparo(ob.X()+2, ob.Y()-1));
+                            disparoSound();
+                        }
+                    }
+                    if(ob.rVidas()==2)
+                    {
+                       if(GetAsyncKeyState(0x20)){
+                            D2.push_back(new DisparoF2(ob.X(), ob.Y()));
+                            D3.push_back(new DisparoF3(ob.X()+4, ob.Y()));
+                            disparoSound2();
+                        }
+                    }
+                    if(ob.rVidas()==1)
+                    {
+                        if(GetAsyncKeyState(0x43)){
+                            D.push_back(new Disparo(ob.X()+2, ob.Y()-1));
+                            disparoSound();
+                        }
+                        if(GetAsyncKeyState(0x20)){
+                            D2.push_back(new DisparoF2(ob.X(), ob.Y()));
+                            D3.push_back(new DisparoF3(ob.X()+4, ob.Y()));
+                            disparoSound2();
+                        }
+                    }
+                    for(i_Disparo2=D2.begin();i_Disparo2!=D2.end();i_Disparo2++)
+                    {
+                        //Controla el disparo y  lo elimina si y es igual a 4
+                        (*i_Disparo2)->mover();
+                        if((*i_Disparo2)->eliminar())
+                        {
+                            gotoxy((*i_Disparo2)->X(),(*i_Disparo2)->Y());printf(" ");
+                            delete(*i_Disparo2);
+                            i_Disparo2=D2.erase(i_Disparo2);
+                        }
+                    }
+                    for(i_Disparo3=D3.begin();i_Disparo3!=D3.end();i_Disparo3++)
+                    {
+                        //Controla el disparo y  lo elimina si y es igual a 4
+                        (*i_Disparo3)->mover();
+                        if((*i_Disparo3)->eliminar())
+                        {
+                            gotoxy((*i_Disparo3)->X(),(*i_Disparo3)->Y());printf(" ");
+                            delete(*i_Disparo3);
+                            i_Disparo3=D3.erase(i_Disparo3);
+                        }
+                    }
+                    for(i_Alien3=A3.begin();i_Alien3!=A3.end();i_Alien3++)
+                    {
+                    for(i_Disparo2=D2.begin();i_Disparo2!=D2.end();i_Disparo2++)
+                    {
+                        if((*i_Alien3)->X()==(*i_Disparo2)->X()||((*i_Alien3)->X()+1==(*i_Disparo2)->X()||(*i_Alien3)->X()+2==(*i_Disparo2)->X()||(*i_Alien3)->X()+3==(*i_Disparo2)->X())&&((*i_Alien3)->Y()+1==(*i_Disparo2)->Y()|| (*i_Alien3)->Y()==(*i_Disparo2)->Y()))
+                           {
+                               gotoxy((*i_Disparo2)->X(),(*i_Disparo2)->Y());printf(" ");
+                               delete(*i_Disparo2);
+                               i_Disparo2=D2.erase(i_Disparo2);
+                               hit++;
+                               if(hit==6)
+                               {
+                                   A3.push_back(new Alien3(rand()%66+4,4));
+                                   gotoxy((*i_Alien3)->X(),(*i_Alien3)->Y());printf("    ");
+                                   delete(*i_Alien3);
+                                   i_Alien3=A3.erase(i_Alien3);
+                                   puntos+=20;
+                                   destruidos++;
+                                   hit=0;
+                               }
 
+                           }
+                    }
+                    }
+                    for(i_Alien3=A3.begin();i_Alien3!=A3.end();i_Alien3++)
+                    {
+                    for(i_Disparo3=D3.begin();i_Disparo3!=D3.end();i_Disparo3++)
+                    {
+                        if((*i_Alien3)->X()==(*i_Disparo3)->X()||((*i_Alien3)->X()+1==(*i_Disparo3)->X()||(*i_Alien3)->X()+2==(*i_Disparo3)->X()||(*i_Alien3)->X()+3==(*i_Disparo3)->X())&&((*i_Alien3)->Y()+1==(*i_Disparo3)->Y()|| (*i_Alien3)->Y()==(*i_Disparo3)->Y()))
+                           {
+                               gotoxy((*i_Disparo3)->X(),(*i_Disparo3)->Y());printf(" ");
+                               delete(*i_Disparo3);
+                               i_Disparo3=D3.erase(i_Disparo3);
+                               hit++;
+                               if(hit==6)
+                               {
+                                   A3.push_back(new Alien3(rand()%66+4,4));
+                                   gotoxy((*i_Alien3)->X(),(*i_Alien3)->Y());printf("    ");
+                                   delete(*i_Alien3);
+                                   i_Alien3=A3.erase(i_Alien3);
+                                   puntos+=20;
+                                   destruidos++;
+                                   hit=0;
+                               }
+
+                           }
+                    }
+                    }
+                    for(i_Disparo=D.begin();i_Disparo!=D.end();i_Disparo++)
+                    {
+                        //Controla el disparo y  lo elimina si y es igual a 4
+                        (*i_Disparo)->mover();
+                        if((*i_Disparo)->eliminar())
+                        {
+                            gotoxy((*i_Disparo)->X(),(*i_Disparo)->Y());printf(" ");
+                            delete(*i_Disparo);
+                            i_Disparo=D.erase(i_Disparo);
+                        }
+                    }
+                    for(i_Alien3=A3.begin();i_Alien3!=A3.end();i_Alien3++)
+                    {
+                    for(i_Disparo=D.begin();i_Disparo!=D.end();i_Disparo++)
+                    {
+                        if((*i_Alien3)->X()==(*i_Disparo)->X()||((*i_Alien3)->X()+1==(*i_Disparo)->X()||(*i_Alien3)->X()+2==(*i_Disparo)->X()||(*i_Alien3)->X()+3==(*i_Disparo)->X())&&((*i_Alien3)->Y()+1==(*i_Disparo)->Y()|| (*i_Alien3)->Y()==(*i_Disparo)->Y()))
+                           {
+                               gotoxy((*i_Disparo)->X(),(*i_Disparo)->Y());printf(" ");
+                               delete(*i_Disparo);
+                               i_Disparo=D.erase(i_Disparo);
+                               hit++;
+                               if(hit==6)
+                               {
+                                   A3.push_back(new Alien3(rand()%66+4,4));
+                                   gotoxy((*i_Alien3)->X(),(*i_Alien3)->Y());printf("    ");
+                                   delete(*i_Alien3);
+                                   i_Alien3=A3.erase(i_Alien3);
+                                   puntos+=10;
+                                   destruidos++;
+                                   hit=0;
+                               }
+                           }
+                    }
+                    }
                     for(boss=B.begin();boss!=B.end();boss++)
                 {
                     (*boss)->mover();
@@ -1459,14 +1596,13 @@ int main()
                                    boss=B.erase(boss);
                                    puntos+=1000;
                                    destruidos++;
-                                   jefeMSound();
                                    hit=0;
                                    fin=true;
                                    Sleep(200);
                                    final(puntos);
-                                   cancionFinal();
+                                   //cancionFinal();
                                    tecla=getch();
-                                   PlaySound(NULL, 0, 0);
+                                   //PlaySound(NULL, 0, 0);
                                    break;
                                     }
 
@@ -1496,7 +1632,7 @@ int main()
             break;
         case 2:
             instrucciones();
-            cancionInstrucciones();
+            //cancionInstrucciones();
             tecla=getch();
             if(tecla==enter)
             {
@@ -1508,7 +1644,7 @@ int main()
             break;
         case 3:
             creditos();
-            cancionCred();
+            //cancionCred();
             tecla=getch();
             if(tecla==enter)
             {
