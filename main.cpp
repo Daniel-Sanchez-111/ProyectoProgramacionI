@@ -36,6 +36,11 @@ void muertesound()
 {
     PlaySound(TEXT("muerte.wav"),NULL,SND_ASYNC);
 }
+
+void muerteJefeSound()
+{
+    PlaySound(TEXT("jefeM.wav"),NULL,SND_ASYNC);
+}
 class Nave
 {
     int x,y;
@@ -1592,6 +1597,7 @@ int main()
                                    gotoxy((*boss)->X(),(*boss)->Y());printf("    ");
                                    delete(*boss);
                                    boss=B.erase(boss);
+                                    muerteJefeSound();
                                    puntos+=1000;
                                    destruidos++;
                                    hit=0;
